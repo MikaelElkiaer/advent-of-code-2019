@@ -2,6 +2,7 @@ package main
 
 import (
 	"advent-of-code-2019/day1"
+	"advent-of-code-2019/day2"
 	"fmt"
 	"os"
 )
@@ -17,6 +18,11 @@ func main() {
 			ans = day1.Problem1Answer()
 		case "2":
 			ans = day1.Problem2Answer()
+		}
+	case "2":
+		switch problem {
+		case "1":
+			ans = day2.Problem1Answer()
 		}
 	}
 
