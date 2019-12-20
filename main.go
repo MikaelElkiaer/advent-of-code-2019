@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	var ans int
+	var ans int64
 
 	day, problem := os.Args[1], os.Args[2]
 	switch day {
