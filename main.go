@@ -23,6 +23,8 @@ func main() {
 		switch problem {
 		case "1":
 			ans = day2.Problem1Answer()
+		case "2":
+			ans = day2.Problem2Answer()
 		}
 	}
 
