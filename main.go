@@ -14,7 +14,9 @@ func main() {
 	case "1":
 		switch problem {
 		case "1":
-			ans = day1.Problem1_Answer()
+			ans = day1.Problem1Answer()
+		case "2":
+			ans = day1.Problem2Answer()
 		}
 	}
 

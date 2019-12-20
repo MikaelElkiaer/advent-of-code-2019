@@ -26,3 +26,24 @@ func TestCalcFuel(t *testing.T) {
 		})
 	}
 }
+
+func TestCalcFuelCompund(t *testing.T) {
+	var tests = []struct {
+		mass int
+		want int
+	}{
+		{14, 2},
+		{1969, 966},
+		{100756, 50346},
+	}
+
+	for _, tt := range tests {
+		testname := fmt.Sprintf("%d", tt.mass)
+		t.Run(testname, func(t *testing.T) {
+			ans := CalcFuelCompound(tt.mass)
+			if ans != tt.want {
+				t.Errorf("Got %d, want %d", ans, tt.want)
+			}
+		})
+	}
+}
