@@ -7,8 +7,8 @@ import (
 
 func TestCalcFuel(t *testing.T) {
 	var tests = []struct {
-		mass int
-		want int
+		mass int64
+		want int64
 	}{
 		{12, 2},
 		{14, 2},
@@ -29,8 +29,8 @@ func TestCalcFuel(t *testing.T) {
 
 func TestCalcFuelCompund(t *testing.T) {
 	var tests = []struct {
-		mass int
-		want int
+		mass int64
+		want int64
 	}{
 		{14, 2},
 		{1969, 966},

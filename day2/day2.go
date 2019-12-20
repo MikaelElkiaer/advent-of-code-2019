@@ -9,7 +9,7 @@ import (
 func Problem1Answer() int64 {
 	input := shared.GetInput("day2/input")
 
-	initial := deserializeIntcode(input)
+	initial := DeserializeIntcode(input)
 	initial[1] = 12
 	initial[2] = 2
 
@@ -19,7 +19,7 @@ func Problem1Answer() int64 {
 }
 
 func RunIntcode(initial []int64) []int64 {
-state := initial
+	state := initial
 loop:
 	for i := 0; ; i += 4 {
 		var op func(x, y int64) int64
@@ -42,7 +42,7 @@ loop:
 	return state
 }
 
-func deserializeIntcode(intcode string) []int64 {
+func DeserializeIntcode(intcode string) []int64 {
 	split := strings.Split(intcode, ",")
 
 	numbers := make([]int64, len(split))
@@ -54,7 +54,7 @@ func deserializeIntcode(intcode string) []int64 {
 	return numbers
 }
 
-func serializeIntcode(intcode []int64) string {
+func SerializeIntcode(intcode []int64) string {
 	raws := make([]string, len(intcode))
 	for i, e := range intcode {
 		raws[i] = strconv.FormatInt(e, 10)

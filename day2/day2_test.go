@@ -20,7 +20,9 @@ func TestRunIntcode(t *testing.T) {
 	for _, tt := range tests {
 		testname := fmt.Sprintf("%s", tt.initial)
 		t.Run(testname, func(t *testing.T) {
-			ans := RunIntcode(tt.initial)
+			initial := DeserializeIntcode(tt.initial)
+			final := RunIntcode(initial)
+			ans := SerializeIntcode(final)
 			if ans != tt.want {
 				t.Errorf("Got %s, want %s", ans, tt.want)
 			}
