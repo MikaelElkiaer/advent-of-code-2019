@@ -33,6 +33,10 @@ func Problem1Answer() int64 {
 	return distance
 }
 
+func FewestStepsToWireIntersectFromCentralPort(wire1 []WirePathStep, wire2 []WirePathStep) int64 {
+	panic("not implemented")
+}
+
 func DistanceToClosestWireIntersectFromCentralPort(wire1 []WirePathStep, wire2 []WirePathStep) int64 {
 	wire1Positions := CalcPositions(wire1)
 	var closestIntersectDistance int64 = math.MaxInt64
