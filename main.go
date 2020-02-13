@@ -4,6 +4,7 @@ import (
 	"advent-of-code-2019/day1"
 	"advent-of-code-2019/day2"
 	"advent-of-code-2019/day3"
+	"advent-of-code-2019/day4"
 	"fmt"
 	"os"
 )
@@ -33,6 +34,13 @@ func main() {
 			ans = day3.Problem1Answer()
 		case "2":
 			ans = day3.Problem2Answer()
+		}
+	case "4":
+		switch problem {
+		case "1":
+			ans = day4.Problem1Answer()
+		case "2":
+			ans = day4.Problem2Answer()
 		}
 	}
 
