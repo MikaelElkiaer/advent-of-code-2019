@@ -5,6 +5,8 @@ import (
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -15,13 +17,13 @@ const (
 )
 
 type WirePathStep struct {
-	direction string
-	distance  int64
+	Directio string
+	Distance int64
 }
 
 type Position struct {
-	x int64
-	y int64
+	X int64
+	Y int64
 }
 
 func Problem1Answer() int64 {
@@ -31,6 +33,51 @@ func Problem1Answer() int64 {
 	distance := DistanceToClosestWireIntersectFromCentralPort(wire1, wire2)
 
 	return distance
+}
+
+func Problem2Answer() int64 {
+	input := shared.GetInput("day3/input")
+	wire1, wire2 := ParseWirePathsInput(input)
+
+	distance := FewestStepsToWireIntersectFromCentralPort(wire1, wire2)
+
+	return distance
+}
+
+func FewestStepsToWireIntersectFromCentralPort(wire1 []WirePathStep, wire2 []WirePathStep) int64 {
+	wire1Positions := CalcPositions(wire1)
+	var fewestSteps int64 = math.MaxInt64
+	wire2LatestPosition := Position{0, 0}
+	for i := 0; i < len(wire2); i++ {
+		wire2PreviousPosition := wire2LatestPosition
+		wire2LatestPosition = CalcPosition(wire2[i], wire2LatestPosition)
+		for j := 1; j < len(wire1Positions); j++ {
+			wire1PreviousPosition := wire1Positions[j-1]
+			wire1LatestPosition := wire1Positions[j]
+
+			intersection, success := CalcIntersection(wire1PreviousPosition, wire1LatestPosition, wire2PreviousPosition, wire2LatestPosition)
+
+			if success && !cmp.Equal(intersection, Position{0, 0}) {
+				var steps int64 = 0
+
+				for _, w := range wire2[:i] {
+					steps += w.Distance
+				}
+				for _, w := range wire1[:j-1] {
+					steps += w.Distance
+				}
+
+				steps += CalcDistance(wire2PreviousPosition, intersection)
+				steps += CalcDistance(wire1PreviousPosition, intersection)
+
+				if steps < fewestSteps {
+					fewestSteps = steps
+				}
+			}
+		}
+	}
+
+	return fewestSteps
 }
 
 func DistanceToClosestWireIntersectFromCentralPort(wire1 []WirePathStep, wire2 []WirePathStep) int64 {
@@ -56,25 +103,35 @@ func DistanceToClosestWireIntersectFromCentralPort(wire1 []WirePathStep, wire2 [
 }
 
 func CalcIntersectionDistance(l1p1, l1p2, l2p1, l2p2 Position) int64 {
-	if l1p1.x == l1p2.x && l2p1.x == l2p2.x {
+	intersection, success := CalcIntersection(l1p1, l1p2, l2p1, l2p2)
 
-	} else if l1p1.y == l1p2.y && l2p1.y == l2p2.y {
-
-	} else if l1p1.x == l1p2.x && l2p1.y == l2p2.y {
-		if Min(l1p1.y, l1p2.y) <= l2p1.y && l2p1.y <= Max(l1p1.y, l1p2.y) && Min(l2p1.x, l2p2.x) <= l1p1.x && l1p1.x <= Max(l2p1.x, l2p2.x) {
-			return CalcDistance(Position{0, 0}, Position{l1p1.x, l2p1.y})
-		}
-	} else if l1p1.y == l1p2.y && l2p1.x == l2p2.x {
-		if Min(l1p1.x, l1p2.x) <= l2p1.x && l2p1.x <= Max(l1p1.x, l1p2.x) && Min(l2p1.y, l2p2.y) <= l1p1.y && l1p1.y <= Max(l2p1.y, l2p2.y) {
-			return CalcDistance(Position{0, 0}, Position{l2p1.x, l1p1.y})
-		}
+	if success {
+		return CalcDistance(Position{0, 0}, intersection)
 	}
 
 	return math.MaxInt64
 }
 
+func CalcIntersection(l1p1, l1p2, l2p1, l2p2 Position) (Position, bool) {
+	if l1p1.X == l1p2.X && l2p1.X == l2p2.X {
+
+	} else if l1p1.Y == l1p2.Y && l2p1.Y == l2p2.Y {
+
+	} else if l1p1.X == l1p2.X && l2p1.Y == l2p2.Y {
+		if Min(l1p1.Y, l1p2.Y) <= l2p1.Y && l2p1.Y <= Max(l1p1.Y, l1p2.Y) && Min(l2p1.X, l2p2.X) <= l1p1.X && l1p1.X <= Max(l2p1.X, l2p2.X) {
+			return Position{l1p1.X, l2p1.Y}, true
+		}
+	} else if l1p1.Y == l1p2.Y && l2p1.X == l2p2.X {
+		if Min(l1p1.X, l1p2.X) <= l2p1.X && l2p1.X <= Max(l1p1.X, l1p2.X) && Min(l2p1.Y, l2p2.Y) <= l1p1.Y && l1p1.Y <= Max(l2p1.Y, l2p2.Y) {
+			return Position{l2p1.X, l1p1.Y}, true
+		}
+	}
+
+	return Position{0, 0}, false
+}
+
 func CalcDistance(p1, p2 Position) int64 {
-	return Abs(p1.x-p2.x) + Abs(p1.y-p2.y)
+	return Abs(p1.X-p2.X) + Abs(p1.Y-p2.Y)
 }
 
 func Abs(x int64) int64 {
@@ -110,18 +167,18 @@ func CalcPositions(wireSteps []WirePathStep) []Position {
 }
 
 func CalcPosition(wireStep WirePathStep, prevPosition Position) Position {
-	x := prevPosition.x
-	y := prevPosition.y
+	x := prevPosition.X
+	y := prevPosition.Y
 
-	switch wireStep.direction {
+	switch wireStep.Directio {
 	case right:
-		x += wireStep.distance
+		x += wireStep.Distance
 	case left:
-		x -= wireStep.distance
+		x -= wireStep.Distance
 	case up:
-		y += wireStep.distance
+		y += wireStep.Distance
 	case down:
-		y -= wireStep.distance
+		y -= wireStep.Distance
 	}
 
 	return Position{x, y}
